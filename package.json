@@ -6,19 +6,39 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "lighthouse": "npx -y lighthouse@13 http://localhost:3000 --view",
+    "ci": "npm run lint && npm run typecheck && npm test -- --ci && npm run build"
   },
   "dependencies": {
     "next": "16.4.6",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
+    "@types/jest": "^30.0.0",
+    "@types/jest-axe": "^3.5.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "jest": "^30.5.2",
+    "jest-axe": "^11.0.0",
+    "jest-environment-jsdom": "^30.5.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
