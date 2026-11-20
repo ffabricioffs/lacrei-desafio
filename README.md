@@ -2,8 +2,8 @@
 
 Duas páginas interativas, acessíveis e responsivas que seguem a identidade visual da Lacrei Saúde (Marsha Design System), construídas com **Next.js 16 + TypeScript + Styled-Components**.
 
-- **Deploy:** `https://SEU-PROJETO.vercel.app` ← _substituir após o deploy_
-- **Repositório:** `https://github.com/SEU-USUARIO/lacrei-desafio` ← _substituir_
+- **Deploy:** https://lacrei-desafio-mu.vercel.app
+- **Repositório:** https://github.com/ffabricioffs/lacrei-desafio
 
 | Página | Rota | O que faz |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ Duas páginas interativas, acessíveis e responsivas que seguem a identidade vis
 **Pré-requisitos:** Node.js 20.9 ou superior (recomendado: 22 LTS) e npm.
 
 ```bash
-git clone https://github.com/SEU-USUARIO/lacrei-desafio.git
+git clone https://github.com/ffabricioffs/lacrei-desafio.git
 cd lacrei-desafio
 npm install
 npm run dev
@@ -282,6 +282,6 @@ git push origin main               # gera um novo deploy de produção sem o pro
 | Performance ≥ 80 no Lighthouse | ✅ | 97–100 |
 | Next.js + TypeScript + Styled-Components | ✅ | |
 | Testes unitários (mín. 3 componentes) | ✅ | 5 componentes + lógica da API, 36 testes |
-| Deploy funcional | ⏳ | Link no topo deste README |
+| Deploy funcional | ✅ | https://lacrei-desafio-mu.vercel.app |
 | README completo + rollback | ✅ | Este arquivo |
 | Mock de integração com API (opcional) | ✅ | `/api/profissionais` |
