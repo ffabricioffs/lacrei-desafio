@@ -50,7 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>
           <SkipLink targetId="conteudo" />
           <Header />
-          <main id="conteudo" tabIndex={-1}>
+          <main id="conteudo">
             {children}
           </main>
           <Footer />

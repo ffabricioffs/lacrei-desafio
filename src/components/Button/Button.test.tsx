@@ -60,7 +60,7 @@ describe("ButtonLink", () => {
         Oferecer atendimento
       </ButtonLink>,
     );
-    const link = screen.getByRole("link", { name: /oferecer atendimento \(abre em nova aba\)/i });
+    const link = screen.getByRole("link", { name: /oferecer atendimento\s\(abre em nova aba\)/i });
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });

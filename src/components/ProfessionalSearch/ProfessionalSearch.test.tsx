@@ -119,6 +119,9 @@ describe("ProfessionalSearch", () => {
 
     const toggle = within(firstCard).getByRole("button", { name: /ver detalhes/i });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+    // Regressão do teste com NVDA: o texto oculto precisa começar com espaço
+    // não separável, senão o leitor anuncia "Ver detalhesde …"
+    expect(toggle.querySelector(".visually-hidden")?.textContent).toMatch(/^ de /);
 
     await user.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "true");

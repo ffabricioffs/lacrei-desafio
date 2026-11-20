@@ -165,7 +165,7 @@ export function ButtonLink({
     return (
       <StyledAnchor href={href} target="_blank" rel="noopener noreferrer" {...styleProps} {...rest}>
         {children}
-        <span className="visually-hidden"> (abre em nova aba)</span>
+        <span className="visually-hidden">{"\u00A0(abre em nova aba)"}</span>
       </StyledAnchor>
     );
   }

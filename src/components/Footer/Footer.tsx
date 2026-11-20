@@ -150,7 +150,7 @@ export function Footer() {
                     {link.external ? (
                       <ExternalLink href={link.href} target="_blank" rel="noopener noreferrer">
                         {link.label}
-                        <span className="visually-hidden"> (abre em nova aba)</span>
+                        <span className="visually-hidden">{"\u00A0(abre em nova aba)"}</span>
                       </ExternalLink>
                     ) : (
                       <InternalLink href={link.href}>{link.label}</InternalLink>
@@ -172,7 +172,7 @@ export function Footer() {
             acesse{" "}
             <ExternalLink href="https://cvv.org.br/" target="_blank" rel="noopener noreferrer">
               cvv.org.br
-              <span className="visually-hidden"> (abre em nova aba)</span>
+              <span className="visually-hidden">{"\u00A0(abre em nova aba)"}</span>
             </ExternalLink>
             .
           </NoticeText>

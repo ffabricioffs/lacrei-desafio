@@ -77,6 +77,12 @@ export const GlobalStyle = createGlobalStyle`
     display: none !important;
   }
 
+  /*
+   * Texto só para leitores de tela. Por ser position: absolute, o navegador
+   * descarta o espaço inicial ao calcular o nome acessível ("Ver detalhesde"):
+   * por isso o conteúdo começa com espaço não separável ( ).
+   * Encontrado no teste manual com NVDA + Edge.
+   */
   .visually-hidden {
     position: absolute !important;
     width: 1px;

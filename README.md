@@ -125,18 +125,31 @@ O que foi aplicado:
 
 ### Teste com leitor de tela
 
-> ⚠️ **Preencha esta seção depois de testar.** Os testes automatizados (axe e Lighthouse) não substituem um teste manual. Roteiro sugerido com NVDA (Windows, Chrome/Firefox) ou VoiceOver (macOS, Safari: `Cmd + F5`):
+Teste manual feito em **20/11/2026** com **NVDA + Microsoft Edge (Windows 11)** no deploy de produção, acompanhando o Visualizador de fala do NVDA.
 
-| Verificação | Esperado | Resultado |
+| Verificação | O que o NVDA anunciou | Resultado |
 | --- | --- | --- |
-| `Tab` na página inicial | Primeiro foco: "Pular para o conteúdo principal" | ☐ |
-| Navegar por marcos (NVDA `D` / VoiceOver rotor) | Banner (header), Navegação principal, Principal (main), Rodapé (contentinfo) e as navegações do rodapé | ☐ |
-| Navegar por títulos (NVDA `H`) | Um `h1` e seções em `h2` | ☐ |
-| Botão do menu (mobile) | Anuncia "Abrir menu, botão, recolhido" e depois "expandido" | ☐ |
-| Pergunta frequente | Anuncia "botão, recolhido/expandido" | ☐ |
-| Filtro "Online" | Anuncia rádio e, ao trocar, o novo total de resultados | ☐ |
-| "Ver detalhes" | Anuncia o nome da pessoa e o estado expandido | ☐ |
-| Link externo | Anuncia "(abre em nova aba)" | ☐ |
+| Link de pular conteúdo | "mesma página, link, Pular para o conteúdo principal" como primeiro item; Enter leva ao `#conteudo` e o próximo Tab cai no breadcrumb, sem passar pelo menu | ✅ |
+| Marcos (Insert + F7) | báner › Navegação principal; principal › Como funciona, Para quem é a Lacrei Saúde, Perguntas frequentes; conteúdo (rodapé) › Lacrei Saúde, Saúde, Segurança e privacidade | ✅ |
+| Títulos (Insert + F7) | Um único `h1`, seções em `h2` e subitens em `h3`, sem saltos de nível | ✅ |
+| Pergunta frequente | "título nível 3, expandido", depois "região" com a resposta | ✅ |
+| Zoom de 200% | Layout vira o de celular, sem cortes nem rolagem horizontal | ✅ |
+| Menu mobile | "botão, recolhido, Abrir menu" → Enter: "Fechar menu, expandido" → Esc: "Abrir menu, recolhido", com o foco de volta no botão | ✅ |
+| Campo de busca | "busca, marco, Nome, especialidade, cidade ou tema, edição, A busca não diferencia acentos nem maiúsculas" | ✅ |
+| Total de resultados (região de status) | "Carregando profissionais…" e "2 profissionais encontrados", sem mover o foco | ✅ |
+| Filtro de modalidade | "Modalidade de atendimento, grupo, Todas, botão de opção…"; ao marcar, anuncia o novo total | ✅ |
+| "Ver detalhes" do card | "Ver detalhes de Dre. Caio Nascimento, botão, recolhido" → "expandido" | ✅ (após correção) |
+| Link externo | "Oferecer atendimento (abre em nova aba)" | ✅ (após correção) |
+
+**Problemas encontrados no teste manual e corrigidos:**
+
+1. **Palavras grudadas no texto oculto.** O NVDA lia "Ver detalhes**de** Dre. Caio" e "Oferecer atendimento**(abre em nova aba)**". O texto exclusivo para leitores de tela usa `position: absolute`, e o navegador descartava o espaço inicial ao montar o nome acessível. A correção foi começar esse texto com espaço não separável (`\u00A0`), e um teste de regressão garante isso.
+2. **Leitura longa ao pular para o conteúdo.** Com `tabIndex={-1}` no `<main>`, o NVDA lia a página inteira ao ativar "Pular para o conteúdo". O `tabindex` foi removido: o link de âncora já move o ponto de partida da navegação por teclado para o início do conteúdo. _(Correção feita após a sessão de teste; vale uma reconferência rápida com o NVDA.)_
+
+**Observações (não são defeitos):**
+
+- Na Lista de elementos do NVDA no Edge, a seção do topo (com o `h1`) não aparece entre os marcos, embora esteja exposta como região com nome na árvore de acessibilidade do navegador. Ela continua acessível pela navegação por títulos.
+- Se o foco sai do navegador logo após um filtro, o NVDA descarta o aviso da região de status. Esse é o comportamento esperado dele para janelas em segundo plano.
 
 ## Performance
 
@@ -279,6 +292,7 @@ git push origin main               # gera um novo deploy de produção sem o pro
 | Três botões interativos | ✅ | Sete tipos de ação real (ver [tabela](#fluxo-navegável-e-botões-interativos)) |
 | Responsividade mobile-first | ✅ | Breakpoints em `styles/theme.ts`, prints em `docs/screenshots` |
 | Acessibilidade ≥ 90 no Lighthouse | ✅ | 100 nas duas páginas |
+| Teste com leitor de tela | ✅ | NVDA + Edge, ver [registro](#teste-com-leitor-de-tela) |
 | Performance ≥ 80 no Lighthouse | ✅ | 97–100 |
 | Next.js + TypeScript + Styled-Components | ✅ | |
 | Testes unitários (mín. 3 componentes) | ✅ | 5 componentes + lógica da API, 36 testes |

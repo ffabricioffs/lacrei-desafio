@@ -163,7 +163,7 @@ export function ProfessionalCard({ professional }: { professional: Professional 
           onClick={() => setExpanded((value) => !value)}
         >
           {expanded ? "Ocultar detalhes" : "Ver detalhes"}
-          <span className="visually-hidden"> de {professional.name}</span>
+          <span className="visually-hidden">{`\u00A0de ${professional.name}`}</span>
         </Button>
       </Actions>
     </Card>
