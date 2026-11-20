@@ -22,43 +22,58 @@ const List = styled.div`
   gap: ${({ theme }) => theme.space.sm};
 `;
 
+/**
+ * Accordion do Marsha (handoff "Accordion Focus – Open"):
+ * - título em Text-base-highlight (16px Bold) na cor color-text-body
+ * - ícone em color-icon-default (#131313) e fundo transparente
+ * - divisória color-border-disabled (#CFCFCF) entre título e conteúdo
+ * - foco: borda do item em color-border-info (blue-60)
+ */
 const Item = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.borderCard};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.white};
   overflow: hidden;
+
+  &:has(button:focus-visible) {
+    border-color: ${({ theme }) => theme.colors.focus};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.focus};
+  }
 `;
 
 const Heading = styled.h3`
-  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-size: ${({ theme }) => theme.fontSizes.md};
+  line-height: 1.5;
 `;
 
 const Trigger = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.space.md};
+  gap: ${({ theme }) => theme.space.sm};
   width: 100%;
   min-height: 56px;
-  padding: ${({ theme }) => `${theme.space.md} ${theme.space.lg}`};
+  padding: ${({ theme }) => theme.space.sm};
   background: none;
   border: 0;
   text-align: left;
-  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-size: ${({ theme }) => theme.fontSizes.md};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.heading};
+  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.text};
 
   &:hover {
     background: ${({ theme }) => theme.colors.primarySurface};
   }
 
+  /* O foco é mostrado na borda do item inteiro (ver Item) */
   &:focus-visible {
-    outline-offset: -3px;
+    outline: none;
   }
 
   svg {
     flex-shrink: 0;
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.heading};
     transition: transform 0.2s ease;
   }
 
@@ -68,7 +83,9 @@ const Trigger = styled.button`
 `;
 
 const Panel = styled.div`
-  padding: ${({ theme }) => `0 ${theme.space.lg} ${theme.space.lg}`};
+  margin-inline: ${({ theme }) => theme.space.sm};
+  padding-block: ${({ theme }) => theme.space.sm};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.text};
 `;
 

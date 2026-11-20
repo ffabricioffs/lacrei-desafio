@@ -153,11 +153,11 @@ Teste manual feito em **20/11/2026** com **NVDA + Microsoft Edge (Windows 11)** 
 
 ## Performance
 
-**Resultado no Lighthouse: 97 a 100** (mínimo exigido: 80).
+**Resultado no Lighthouse: 96 a 100** (mínimo exigido: 80).
 
 | Página | Mobile | Desktop | LCP (mobile) | CLS |
 | --- | --- | --- | --- | --- |
-| `/` | 97–100 | 100 | 1,4–2,5 s | 0 |
+| `/` | 96–100 | 100 | 1,4–2,5 s | 0 |
 | `/profissionais` | 99–100 | 100 | 0,8 s | 0 |
 
 _Medido com Lighthouse 13 (várias execuções) sobre o build de produção local. No Vercel os números tendem a ser iguais ou melhores (CDN + HTTP/2)._
@@ -273,6 +273,7 @@ Os tokens e componentes foram extraídos do **Guia de Estilo – Marsha P. Johns
 | Botões | 48px de altura, padding 12/32, raio 8, Bold 18/27, sombra `0 5px 5px rgba(0,0,0,.3)`. Estados de hover, pressionado e desabilitado em Solid, Outline e Link. Foco com anel de 2px blue-60 a 4px do botão | `components/Button` |
 | Header | "Header Institucional": fundo `gradient-subtle`, 96px de altura, logo oficial, links no estilo Button Link e botão Solid. No mobile, botão de ícone Solid de 48px | `components/Header` |
 | Footer | "Footer Institucional": divisórias em emerald-20, logo empilhado, redes sociais (botões Ghost 48px), três colunas de links (título 18 Bold, links 16 com 48px de altura mínima), avisos em 14px e botão Outline "voltar ao topo". No mobile, as colunas ficam em grade, sem o logo | `components/Footer` |
+| Accordion, Input e Tag | Conferidos nas páginas de handoff (detalhes em "Limitações e observações") | `components/Accordion`, `ProfessionalSearch`, `ProfessionalCard` |
 | Logo e ícones | Logo horizontal, logo empilhado e ícones (Facebook, Instagram, LinkedIn, e-mail, seta) exportados do Figma **sem alteração**: os arquivos têm o mesmo hash SHA-256 dos originais | `public/brand`, `public/icons` |
 
 Outras decisões:
@@ -293,7 +294,12 @@ Outras decisões:
 
 ### Limitações e observações
 
-- **Componentes conferidos só pelos tokens:** acordeão, campo de texto, rádio e card usam os tokens oficiais (bordas, raios, cores, foco e tipografia), mas não foram comparados peça a peça com as páginas do guia. O plano gratuito do Figma limita o número de consultas pelo conector, e o limite acabou antes desses componentes.
+- **Como os componentes foram conferidos:** cores, tipografia, botões, header, footer, logo e ícones vieram do conector oficial do Figma, com valores exatos. Acordeão, campo de texto e Tags foram conferidos pelas páginas de handoff do guia:
+  - **Accordion:** título em 16px Bold, divisória `#CFCFCF` entre título e conteúdo, ícone em `#131313` e foco na borda do item.
+  - **Input:** label em negrito, borda de 2px e raio 8; no hover e quando preenchido, a borda fica `#29A480`.
+  - **Tag:** cantos suaves, fundo `#DFF2ED`/`#F0F0F0` e texto escuro.
+
+  O Marsha não tem um componente de "chip" de filtro, então os filtros de modalidade combinam o Radio nativo (pela acessibilidade) com o visual dos botões Outline/Solid.
 - **Observação para o time de design:** no botão Outline em hover, o texto `#007756` sobre o fundo `#B2DFD0` tem contraste de cerca de 3,8:1. O critério AA pede 4,5:1 para texto de 18px Bold. O site segue o guia, mas vale revisar esse estado no Marsha.
 - **Rodapé sem CNPJ:** o "Footer Institucional" traz o CNPJ da Lacrei. Como este site é um projeto de desafio, e não o site oficial, troquei essa linha por um aviso de que é um projeto do desafio.
 
@@ -307,7 +313,7 @@ Outras decisões:
 | Responsividade mobile-first | ✅ | Breakpoints em `styles/theme.ts`, prints em `docs/screenshots` |
 | Acessibilidade ≥ 90 no Lighthouse | ✅ | 100 nas duas páginas |
 | Teste com leitor de tela | ✅ | NVDA + Edge, ver [registro](#teste-com-leitor-de-tela) |
-| Performance ≥ 80 no Lighthouse | ✅ | 97–100 |
+| Performance ≥ 80 no Lighthouse | ✅ | 96–100 |
 | Next.js + TypeScript + Styled-Components | ✅ | |
 | Testes unitários (mín. 3 componentes) | ✅ | 5 componentes + lógica da API, 38 testes |
 | Deploy funcional | ✅ | https://lacrei-desafio-mu.vercel.app |

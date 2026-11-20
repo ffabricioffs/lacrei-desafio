@@ -49,9 +49,19 @@ const inputStyles = `
   background: #fff;
 `;
 
+/** input-text do Marsha: 48px, borda 2px, raio 8; preenchido/hover com color-border-hover */
 const Input = styled.input`
   ${inputStyles}
   border: 2px solid ${({ theme }) => theme.colors.textSecondary};
+
+  &:hover,
+  &:not(:placeholder-shown) {
+    border-color: ${({ theme }) => theme.colors.primaryBorderHover};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textSecondary};
+  }
 `;
 
 const Select = styled.select`

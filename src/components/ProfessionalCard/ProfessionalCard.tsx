@@ -62,16 +62,16 @@ const Badges = styled.ul`
   gap: ${({ theme }) => theme.space.xs};
 `;
 
+/** Tag do Marsha: retângulo de cantos suaves, fundo emerald-10 ou gray-20 e texto escuro */
 const Badge = styled.li<{ $tone?: "primary" | "neutral" }>`
-  padding: ${({ theme }) => `${theme.space.xxs} ${theme.space.sm}`};
-  border-radius: ${({ theme }) => theme.radii.pill};
+  padding: ${({ theme }) => `${theme.space.xxs} ${theme.space.xs}`};
+  border-radius: ${({ theme }) => theme.radii.sm};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  line-height: 1.5;
   background: ${({ $tone, theme }) =>
     $tone === "primary" ? theme.colors.primarySurface : theme.colors.surface};
   color: ${({ theme }) => theme.colors.heading};
-  border: 1px solid
-    ${({ $tone, theme }) => ($tone === "primary" ? theme.colors.primaryLight : theme.colors.border)};
 `;
 
 const Details = styled.div`
