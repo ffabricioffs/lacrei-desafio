@@ -13,7 +13,6 @@ const Wrapper = styled(Container)`
 
   h1 {
     font-size: ${({ theme }) => theme.fontSizes.xxl};
-    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 

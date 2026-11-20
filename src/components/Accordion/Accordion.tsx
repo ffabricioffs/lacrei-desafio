@@ -23,7 +23,7 @@ const List = styled.div`
 `;
 
 const Item = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.borderCard};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.white};
   overflow: hidden;
@@ -46,7 +46,7 @@ const Trigger = styled.button`
   text-align: left;
   font-size: ${({ theme }) => theme.fontSizes.lg};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.heading};
 
   &:hover {
     background: ${({ theme }) => theme.colors.primarySurface};
@@ -69,7 +69,7 @@ const Trigger = styled.button`
 
 const Panel = styled.div`
   padding: ${({ theme }) => `0 ${theme.space.lg} ${theme.space.lg}`};
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 function Chevron() {

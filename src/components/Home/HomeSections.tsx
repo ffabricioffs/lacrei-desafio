@@ -10,10 +10,10 @@ import { media } from "@/styles/theme";
 /* ---------- Hero ---------- */
 
 const HeroSection = styled.section`
-  background: linear-gradient(180deg, ${({ theme }) => theme.colors.white} 0%, #f4fbf8 100%);
-  padding-block: ${({ theme }) => theme.space.xl} ${({ theme }) => theme.space.xxl};
+  background: linear-gradient(180deg, #ffffff 0%, ${({ theme }) => theme.colors.primarySurface} 100%);
+  padding-block: ${({ theme }) => theme.space.xl};
 
-  ${media.md} {
+  ${media.lg} {
     padding-block: ${({ theme }) => theme.space.xxxl};
   }
 `;
@@ -28,13 +28,12 @@ const HeroGrid = styled(Container)`
   }
 `;
 
+/** Headline-xl (1 por página): 32px no mobile → 48px no desktop */
 const HeroTitle = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxl};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.space.md};
 
-  ${media.md} {
+  ${media.lg} {
     font-size: ${({ theme }) => theme.fontSizes.display};
   }
 `;
@@ -43,9 +42,9 @@ const HeroActions = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.space.sm};
-  margin-top: ${({ theme }) => theme.space.xl};
+  margin-top: ${({ theme }) => theme.space.lg};
 
-  ${media.sm} {
+  ${media.md} {
     flex-direction: row;
   }
 `;
@@ -132,17 +131,19 @@ const Step = styled.li`
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
-    font-weight: ${({ theme }) => theme.fontWeights.extrabold};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
     font-size: ${({ theme }) => theme.fontSizes.lg};
   }
 
+  /* Text-xl-high200: 18px Bold */
   h3 {
     font-size: ${({ theme }) => theme.fontSizes.lg};
+    line-height: 1.5;
     margin-bottom: ${({ theme }) => theme.space.xxs};
   }
 
   p {
-    color: ${({ theme }) => theme.colors.textSecondary};
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -209,7 +210,7 @@ export function HowItWorks() {
 /* ---------- Para quem é ---------- */
 
 const AudienceSection = styled(Section)`
-  background: ${({ theme }) => theme.colors.lavender};
+  background: ${({ theme }) => theme.colors.primarySurface};
 `;
 
 const Cards = styled.ul`
@@ -226,18 +227,19 @@ const Card = styled.li`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.space.md};
-  padding: ${({ theme }) => theme.space.xl};
+  padding: ${({ theme }) => theme.space.lg};
   background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radii.lg};
-  box-shadow: ${({ theme }) => theme.shadows.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderCard};
+  border-radius: ${({ theme }) => theme.radii.md};
 
+  /* Headline-sm-high200: 24px Bold */
   h3 {
     font-size: ${({ theme }) => theme.fontSizes.xl};
-    color: ${({ theme }) => theme.colors.primary};
+    line-height: 1.5;
   }
 
   p {
-    color: ${({ theme }) => theme.colors.textSecondary};
+    color: ${({ theme }) => theme.colors.text};
     flex: 1;
   }
 `;

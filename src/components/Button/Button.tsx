@@ -14,65 +14,85 @@ interface StyleProps {
 }
 
 /**
- * Estilos do botão Marsha: raio 8px, Nunito 700, verde primário.
- * - primary: fundo verde, texto branco
- * - secondary: contorno verde, fundo branco
- * - ghost: só texto verde (ações de menor ênfase)
- * Altura mínima de 48px para alvo de toque confortável (WCAG 2.5.8).
+ * Botão "ButtonDefault" do Marsha Design System (handoff do Figma):
+ * altura 48px, padding 12px 32px, raio 8px, Nunito Bold 18px/27px.
+ * - primary (Solid): emerald-60; hover emerald-70; pressionado emerald-80
+ * - secondary (Outline): borda 2px emerald-60; hover fundo emerald-20 e
+ *   borda emerald-50; pressionado fundo emerald-30 e borda emerald-80
+ * - ghost (Button Link): só texto; hover fundo emerald-20
+ * - foco: anel 2px blue-60 afastado 4px do botão (color-border-focus-info)
+ * - desabilitado: fundo gray-30 e texto gray-60
  */
 const buttonStyles = css<StyleProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.space.xs};
-  min-height: ${({ $size }) => ($size === "sm" ? "40px" : "48px")};
-  padding: ${({ $size, theme }) =>
-    $size === "sm" ? `${theme.space.xs} ${theme.space.md}` : `10px ${theme.space.xl}`};
+  gap: ${({ theme }) => theme.space.sm};
+  min-height: 48px;
+  padding: ${({ $size }) => ($size === "sm" ? "12px 24px" : "12px 32px")};
   width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
-  border: 2px solid ${({ theme }) => theme.colors.primary};
+  border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.radii.md};
   font-family: inherit;
   font-size: ${({ $size, theme }) => ($size === "sm" ? theme.fontSizes.md : theme.fontSizes.lg)};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  line-height: 1.2;
+  line-height: 1.5;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   transition:
     background-color 0.15s ease,
     color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color 0.15s ease;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 4px;
+    border-radius: ${({ theme }) => theme.radii.md};
+  }
 
   ${({ $variant, theme }) => {
     switch ($variant) {
       case "secondary":
         return css`
           background: ${theme.colors.white};
+          border-color: ${theme.colors.primary};
           color: ${theme.colors.primary};
+          box-shadow: ${theme.shadows.button};
 
           &:hover:not(:disabled) {
-            background: ${theme.colors.primarySurface};
+            background: ${theme.colors.primaryLight};
+            border-color: ${theme.colors.primaryBorderHover};
             color: ${theme.colors.primaryHover};
-            border-color: ${theme.colors.primaryHover};
+          }
+
+          &:active:not(:disabled) {
+            background: ${theme.colors.primaryPressedSurface};
+            border-color: ${theme.colors.primaryActive};
+            color: ${theme.colors.primaryActive};
           }
         `;
       case "ghost":
         return css`
           background: transparent;
-          border-color: transparent;
           color: ${theme.colors.primary};
 
           &:hover:not(:disabled) {
+            background: ${theme.colors.primaryLight};
             color: ${theme.colors.primaryHover};
-            text-decoration: underline;
+          }
+
+          &:active:not(:disabled) {
+            background: ${theme.colors.primaryPressedSurface};
+            color: ${theme.colors.primaryActive};
           }
         `;
       default:
         return css`
           background: ${theme.colors.primary};
+          border-color: ${theme.colors.primary};
           color: ${theme.colors.white};
-          box-shadow: ${theme.shadows.sm};
+          box-shadow: ${theme.shadows.button};
 
           &:hover:not(:disabled) {
             background: ${theme.colors.primaryHover};
@@ -90,8 +110,10 @@ const buttonStyles = css<StyleProps>`
   &:disabled,
   &[aria-disabled="true"] {
     cursor: not-allowed;
-    background: ${({ theme }) => theme.colors.border};
-    border-color: ${({ theme }) => theme.colors.border};
+    background: ${({ $variant, theme }) =>
+      $variant === "primary" ? theme.colors.border : theme.colors.white};
+    border-color: ${({ $variant, theme }) =>
+      $variant === "ghost" ? "transparent" : theme.colors.border};
     color: ${({ theme }) => theme.colors.textSecondary};
     box-shadow: none;
   }

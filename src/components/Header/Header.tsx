@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
@@ -14,111 +15,161 @@ export const NAV_ITEMS = [
   { href: "/#como-funciona", label: "Como funciona" },
 ] as const;
 
+/**
+ * "Header Institucional" do Marsha: fundo gradient-subtle, 96px de altura
+ * (48px de área de toque + 24px de respiro), logo oficial e links no estilo
+ * Button Link com 24px de distância entre si.
+ */
 const Bar = styled.header`
   position: sticky;
   top: 0;
   z-index: 100;
-  background: ${({ theme }) => theme.colors.white};
-  box-shadow: ${({ theme }) => theme.shadows.sm};
+  background: ${({ theme }) => theme.colors.gradientSubtle};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.primarySurface};
 `;
 
 const Inner = styled(Container)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: ${({ theme }) => theme.layout.headerHeight};
   gap: ${({ theme }) => theme.space.md};
+  min-height: ${({ theme }) => theme.layout.headerHeight};
+  padding-block: ${({ theme }) => theme.space.md};
+
+  ${media.lg} {
+    padding-block: 12px;
+  }
 `;
 
+/** "Área de toque" do logo: 48px de altura, como no handoff */
 const Logo = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: ${({ theme }) => theme.space.xs};
-  font-size: ${({ theme }) => theme.fontSizes.xl};
-  font-weight: ${({ theme }) => theme.fontWeights.extrabold};
-  color: ${({ theme }) => theme.colors.primary};
-  text-decoration: none;
-  letter-spacing: -0.01em;
+  min-height: 48px;
+  flex-shrink: 0;
+
+  img {
+    width: auto;
+    height: 16px;
+  }
+
+  ${media.md} {
+    img {
+      height: 24px;
+    }
+  }
 `;
 
+/** Botão de ícone Solid (48 × 48), como o botão de conta do header mobile */
 const MenuToggle = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  border: 2px solid ${({ theme }) => theme.colors.primary};
+  border: 0;
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.white};
-  color: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  box-shadow: ${({ theme }) => theme.shadows.button};
 
-  &[aria-expanded="true"] {
-    background: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryHover};
   }
 
-  ${media.md} {
+  &[aria-expanded="true"] {
+    background: ${({ theme }) => theme.colors.primaryActive};
+  }
+
+  &:focus-visible {
+    outline-offset: 4px;
+    border-radius: ${({ theme }) => theme.radii.md};
+  }
+
+  ${media.lg} {
     display: none;
   }
 `;
 
 const Nav = styled.nav<{ $open: boolean }>`
-  /* Mobile: painel abaixo do header, exibido só quando aberto */
+  /* Mobile e tablet: painel abaixo do header, exibido só quando aberto */
   display: ${({ $open }) => ($open ? "block" : "none")};
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   background: ${({ theme }) => theme.colors.white};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  border-top: 1px solid ${({ theme }) => theme.colors.primaryLight};
   box-shadow: ${({ theme }) => theme.shadows.md};
   padding: ${({ theme }) => theme.space.md};
 
-  ${media.md} {
+  ${media.lg} {
     display: flex;
     align-items: center;
-    gap: ${({ theme }) => theme.space.lg};
+    gap: ${({ theme }) => theme.space.md};
     position: static;
     padding: 0;
     border: 0;
     box-shadow: none;
     background: transparent;
   }
+
+  /* Botão de ação ocupa a largura toda no painel mobile */
+  & > a {
+    width: 100%;
+  }
+
+  ${media.lg} {
+    & > a {
+      width: auto;
+      white-space: nowrap;
+    }
+  }
 `;
 
 const NavList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.space.xxs};
+  gap: ${({ theme }) => theme.space.xs};
   margin-bottom: ${({ theme }) => theme.space.md};
 
-  ${media.md} {
+  ${media.lg} {
     flex-direction: row;
-    gap: ${({ theme }) => theme.space.lg};
+    gap: ${({ theme }) => theme.space.xs};
     margin-bottom: 0;
   }
 `;
 
+/** Button Link do Marsha: texto emerald-60 Bold 18px, hover com fundo emerald-20 */
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;
   min-height: 48px;
-  padding-inline: ${({ theme }) => theme.space.xs};
+  padding: 12px 16px;
+  border-radius: ${({ theme }) => theme.radii.md};
   font-size: ${({ theme }) => theme.fontSizes.lg};
+
+  ${media.lg} {
+    padding: 12px;
+  }
+
+  ${media.xl} {
+    padding: 12px 16px;
+  }
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.primary};
   text-decoration: none;
-  border-radius: ${({ theme }) => theme.radii.sm};
+  white-space: nowrap;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-    text-decoration: underline;
+    background: ${({ theme }) => theme.colors.primaryLight};
+    color: ${({ theme }) => theme.colors.primaryHover};
   }
 
   &[aria-current="page"] {
-    color: ${({ theme }) => theme.colors.primary};
     text-decoration: underline;
-    text-decoration-thickness: 3px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
   }
 `;
 
@@ -162,10 +213,17 @@ export function Header() {
   }, [open]);
 
   return (
-    <Bar>
+    <Bar id="topo">
       <Inner>
         <Logo href="/" aria-label="Lacrei Saúde, ir para a página inicial">
-          Lacrei Saúde
+          <Image
+            src="/brand/logo-lacrei-horizontal.svg"
+            alt=""
+            width={203}
+            height={24}
+            loading="eager"
+            fetchPriority="high"
+          />
         </Logo>
 
         <MenuToggle
@@ -196,7 +254,7 @@ export function Header() {
               );
             })}
           </NavList>
-          <ButtonLink href="/profissionais" size="sm">
+          <ButtonLink href="/profissionais">
             Buscar atendimento
           </ButtonLink>
         </Nav>

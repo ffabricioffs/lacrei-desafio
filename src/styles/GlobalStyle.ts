@@ -54,6 +54,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, h4 {
+    color: ${({ theme }) => theme.colors.heading};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
     line-height: ${({ theme }) => theme.lineHeights.tight};
     overflow-wrap: break-word;
   }
@@ -95,11 +97,15 @@ export const GlobalStyle = createGlobalStyle`
     border: 0;
   }
 
-  /* Foco sempre visível para quem navega por teclado (WCAG 2.4.7) */
+  /*
+   * Foco sempre visível para quem navega por teclado (WCAG 2.4.7), no padrão
+   * do Marsha: anel de 2px em blue-60 (color-border-focus-info) afastado do
+   * elemento.
+   */
   :focus-visible {
-    outline: 3px solid ${({ theme }) => theme.colors.focus};
-    outline-offset: 3px;
-    border-radius: 2px;
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   @media (prefers-reduced-motion: reduce) {

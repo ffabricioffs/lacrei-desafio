@@ -3,13 +3,18 @@
 import styled from "styled-components";
 import { media } from "@/styles/theme";
 
+/**
+ * Container do grid Marsha: 24px de margem no mobile e conteúdo de até
+ * 1116px no desktop (artboard de 1440px com 162px de margem lateral).
+ */
 export const Container = styled.div`
   width: 100%;
-  max-width: ${({ theme }) => theme.layout.maxWidth};
+  max-width: calc(${({ theme }) => theme.layout.maxWidth} + 2 * ${({ theme }) => theme.space.md});
   margin-inline: auto;
   padding-inline: ${({ theme }) => theme.space.md};
 
   ${media.md} {
+    max-width: calc(${({ theme }) => theme.layout.maxWidth} + 2 * ${({ theme }) => theme.space.xl});
     padding-inline: ${({ theme }) => theme.space.xl};
   }
 `;
@@ -28,30 +33,30 @@ export const VisuallyHidden = styled.span`
 `;
 
 export const Section = styled.section`
-  padding-block: ${({ theme }) => theme.space.xxl};
+  padding-block: ${({ theme }) => theme.space.xl};
 
-  ${media.md} {
+  ${media.lg} {
     padding-block: ${({ theme }) => theme.space.xxxl};
   }
 `;
 
+/** Headline-lg (Seções): 24px no mobile → 40px no desktop, Bold, 120% */
 export const SectionTitle = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.xl};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.space.md};
+  margin-bottom: ${({ theme }) => theme.space.sm};
 
-  ${media.md} {
-    font-size: ${({ theme }) => theme.fontSizes.xxl};
+  ${media.lg} {
+    font-size: ${({ theme }) => theme.fontSizes.xxxl};
   }
 `;
 
+/** Texto de apoio: Text-base (16px) no mobile → Text-xl (18px) no desktop */
 export const Lead = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.md};
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: ${({ theme }) => theme.colors.text};
   max-width: 62ch;
 
-  ${media.md} {
+  ${media.lg} {
     font-size: ${({ theme }) => theme.fontSizes.lg};
   }
 `;

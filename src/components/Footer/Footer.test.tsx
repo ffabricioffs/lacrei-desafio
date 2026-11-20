@@ -43,6 +43,26 @@ describe("Footer", () => {
     expect(screen.getByText("188")).toBeInTheDocument();
   });
 
+  it("lista as redes sociais com nomes acessíveis, já que os links são só ícones", () => {
+    renderWithTheme(<Footer />);
+    const social = screen.getByRole("list", { name: "Redes sociais e contato" });
+    const links = within(social).getAllByRole("link");
+    expect(links).toHaveLength(4);
+    expect(within(social).getByRole("link", { name: /Instagram da Lacrei Saúde/ })).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/lacrei.saude",
+    );
+    // E-mail abre o cliente de e-mail, não uma nova aba
+    const email = within(social).getByRole("link", { name: "E-mail da Lacrei Saúde" });
+    expect(email).toHaveAttribute("href", "mailto:contato@lacreisaude.com.br");
+    expect(email).not.toHaveAttribute("target");
+  });
+
+  it("tem o botão Voltar ao topo apontando para o início da página", () => {
+    renderWithTheme(<Footer />);
+    expect(screen.getByRole("link", { name: "Voltar ao topo" })).toHaveAttribute("href", "#topo");
+  });
+
   it("não tem violações de acessibilidade (axe)", async () => {
     const { container } = renderWithTheme(<Footer />);
     expect(await axe(container)).toHaveNoViolations();

@@ -23,7 +23,7 @@ const Form = styled.form`
   gap: ${({ theme }) => theme.space.md};
   padding: ${({ theme }) => theme.space.lg};
   background: ${({ theme }) => theme.colors.primarySurface};
-  border-radius: ${({ theme }) => theme.radii.lg};
+  border-radius: ${({ theme }) => theme.radii.md};
 
   ${media.lg} {
     grid-template-columns: 2fr 1fr auto;
@@ -163,8 +163,9 @@ const Grid = styled.ul`
 
 const Skeleton = styled.li`
   height: 280px;
-  border-radius: ${({ theme }) => theme.radii.lg};
-  background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
+  border-radius: ${({ theme }) => theme.radii.md};
+  /* Skeleton em gray-20 → gray-30 */
+  background: linear-gradient(90deg, #f0f0f0 25%, #cfcfcf 37%, #f0f0f0 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 
@@ -182,9 +183,9 @@ const Feedback = styled.div<{ $tone: "error" | "neutral" }>`
   padding: ${({ theme }) => theme.space.lg};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ $tone, theme }) =>
-    $tone === "error" ? theme.colors.errorSurface : theme.colors.lavender};
+    $tone === "error" ? theme.colors.errorSurface : theme.colors.infoSurface};
   border-left: 4px solid
-    ${({ $tone, theme }) => ($tone === "error" ? theme.colors.error : theme.colors.primary)};
+    ${({ $tone, theme }) => ($tone === "error" ? theme.colors.error : theme.colors.info)};
 `;
 
 export function ProfessionalSearch() {

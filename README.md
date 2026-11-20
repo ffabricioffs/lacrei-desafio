@@ -118,7 +118,7 @@ O que foi aplicado:
 - **ARIA só onde o HTML não basta:** `aria-expanded`/`aria-controls` (menu, acordeão, detalhes do card), `aria-current="page"` (link ativo), `role="status"` + `aria-live="polite"` (total de resultados), `role="alert"` (erro), `role="search"` (formulário de busca).
 - **Leitores de tela:** links externos avisam "(abre em nova aba)"; botões "Ver detalhes" incluem o nome da pessoa em texto oculto ("Ver detalhes de Dra. Helena Duarte"); ilustrações decorativas com `alt=""`.
 - **Formulário:** `label` associado a cada campo, dica ligada por `aria-describedby`, rádios nativos agrupados em `fieldset`/`legend`.
-- **Contraste (WCAG AA):** verde `#018762` sobre branco = 4,53:1; texto `#1F1F1F` = 16,6:1; texto secundário `#515151` = 8:1. O verde só é usado como cor de texto sobre fundo branco.
+- **Contraste (WCAG AA):** verde `#018762` sobre branco = 4,52:1; títulos `#131313` = 18,6:1; corpo `#2D2D2D` = 13,8:1; texto de apoio `#515151` = 7,9:1; anel de foco `#28588A` = 7,4:1.
 - **Alvos de toque:** botões com no mínimo 44–48px de altura.
 - **Movimento reduzido:** animações e rolagem suave desligadas com `prefers-reduced-motion: reduce`.
 - **Testes automatizados com `jest-axe`** em todos os componentes testados (zero violações).
@@ -164,14 +164,14 @@ _Medido com Lighthouse 13 (várias execuções) sobre o build de produção loca
 
 - **Páginas pré-renderizadas** (estáticas) no build. Só a API roda sob demanda.
 - **Imagens:** `next/image` com `width`/`height` (sem layout shift); a ilustração abaixo da dobra usa `loading="lazy"`; a do hero usa `loading="eager"` + `fetchPriority="high"` por ser candidata a LCP. As ilustrações são SVGs leves (menos de 2 KB cada).
-- **Fonte auto-hospedada** com `next/font/local` (Nunito 400/600/700/800 em `.woff2`, só subset latino), com `display: swap` e preload automático. Nenhuma requisição a servidores de terceiros.
+- **Fonte auto-hospedada** com `next/font/local` (Nunito 400/600/700 em `.woff2`, só subset latino), com `display: swap` e preload automático. Nenhuma requisição a servidores de terceiros.
 - **Bundle enxuto:** sem bibliotecas de UI, ícones ou utilitários extras. Ícones são SVG inline. O plugin SWC do styled-components minifica o CSS e remove espaços em branco.
 - **Requisições canceláveis:** a busca usa `AbortController`, então filtros trocados rapidamente não disputam a resposta.
 - **Cache HTTP** na API simulada (`max-age=60, stale-while-revalidate=300`).
 
 ## Testes (registro)
 
-Jest 30 + React Testing Library + `@testing-library/user-event` + `jest-axe`. **36 testes em 6 suítes, todos passando.**
+Jest 30 + React Testing Library + `@testing-library/user-event` + `jest-axe`. **38 testes em 6 suítes, todos passando.**
 
 ```bash
 npm test               # roda tudo
@@ -182,7 +182,7 @@ npm run test:coverage  # com cobertura
 | --- | --- | --- |
 | `Button.test.tsx` | **Navegação (botões/links)** | `type="button"` por padrão, clique + Enter + Espaço, estado desabilitado, props de estilo não vazam para o DOM, `href` interno, link externo com `target`/`rel` seguro e aviso para leitor de tela, axe |
 | `Header.test.tsx` | **Header** | Landmark `banner`, logo leva ao início, todos os links da navegação, `aria-current` na página atual, menu mobile com `aria-expanded`/`aria-controls`/rótulo dinâmico, Esc fecha e devolve o foco, axe |
-| `Footer.test.tsx` | **Footer** | Landmark `contentinfo`, navegações rotuladas por coluna, links externos seguros, rotas internas, aviso de emergência e CVV 188, axe |
+| `Footer.test.tsx` | **Footer** | Landmark `contentinfo`, navegações rotuladas por coluna, links externos seguros, rotas internas, redes sociais com nome acessível, "voltar ao topo", aviso de emergência e CVV 188, axe |
 | `Accordion.test.tsx` | **Conteúdo interativo** | Começa fechado, abre/fecha com ligação botão ↔ região, vários abertos, uso só por teclado, nível de título configurável, axe |
 | `ProfessionalSearch.test.tsx` | **Conteúdo interativo + API** | Carregamento e total anunciado, busca sem acento, filtro por modalidade, estado vazio + limpar filtros (foco volta ao campo), erro com `role="alert"` + tentar novamente, expandir detalhes do card, axe |
 | `professionals.test.ts` | Lógica da API | Normalização de acentos, filtros por termo, especialidade e modalidade, lista de especialidades |
@@ -260,14 +260,27 @@ git push origin main               # gera um novo deploy de produção sem o pro
 
 ## Justificativas visuais e técnicas
 
-### Visual
+### Visual (conferido no Figma do Marsha Design System)
 
-- **Tokens da Marsha centralizados em `src/styles/theme.ts`:** verde primário `#018762`, texto `#1F1F1F`/`#515151`, verde claro `#B0E0D3`, lavanda `#F9F3FF`, raio de 8px e tipografia **Nunito**. Os valores foram conferidos no site oficial da Lacrei. Se algum token do Figma divergir, basta ajustar esse arquivo.
-- **Botões** no padrão da Lacrei: Nunito 700, raio 8px, primário cheio e secundário com contorno. Cada um tem estados de hover, active, foco e desabilitado.
-- **Hierarquia clara:** títulos principais em verde (só sobre fundo branco, para manter o contraste); títulos de seção em texto escuro; fundos lavanda/verde-claro alternam as seções.
-- **Ilustrações próprias em SVG** com as cores da marca e a bandeira do orgulho, leves e nítidas em qualquer tela.
+Os tokens e componentes foram extraídos do **Guia de Estilo – Marsha P. Johnson** no Figma, pelo conector oficial do Figma (variáveis, especificações de handoff e assets) e por inspeção das páginas do guia.
+
+| Item | O que o guia define | Onde está no código |
+| --- | --- | --- |
+| Cores | Emerald 10–80 (primária `#018762`, hover `#007756`, pressionado `#014C37`), cinzas (título `#131313`, corpo `#2D2D2D`, apoio `#515151`, bordas `#BFBFBF`/`#CFCFCF`), red-60 para erro, blue-60 `#28588A` para foco e gradiente `gradient-subtle` | `src/styles/theme.ts`, com o nome do token do Figma ao lado de cada valor |
+| Tipografia | Nunito. Headline-xl 48 · lg 40 · base 32 · sm 24 (Bold, 120%) e Text-xl 18 · base 16 · sm 14 · xs 12 (150%) | `fontSizes` no tema. O `h1` usa Headline-xl, os títulos de seção Headline-lg e o corpo Text-base/Text-xl |
+| Espaços | Sistema em múltiplos de 8px | `space` no tema (8, 16, 24, 32, 48, 64, 80) |
+| Pontos de quebra | Mobile < 600 · tablet 600–1023 · desktop ≥ 1024 · grid XL ≥ 1200. Conteúdo de 1116px no desktop | `breakpoints` e `layout.maxWidth` |
+| Botões | 48px de altura, padding 12/32, raio 8, Bold 18/27, sombra `0 5px 5px rgba(0,0,0,.3)`. Estados de hover, pressionado e desabilitado em Solid, Outline e Link. Foco com anel de 2px blue-60 a 4px do botão | `components/Button` |
+| Header | "Header Institucional": fundo `gradient-subtle`, 96px de altura, logo oficial, links no estilo Button Link e botão Solid. No mobile, botão de ícone Solid de 48px | `components/Header` |
+| Footer | "Footer Institucional": divisórias em emerald-20, logo empilhado, redes sociais (botões Ghost 48px), três colunas de links (título 18 Bold, links 16 com 48px de altura mínima), avisos em 14px e botão Outline "voltar ao topo". No mobile, as colunas ficam em grade, sem o logo | `components/Footer` |
+| Logo e ícones | Logo horizontal, logo empilhado e ícones (Facebook, Instagram, LinkedIn, e-mail, seta) exportados do Figma **sem alteração**: os arquivos têm o mesmo hash SHA-256 dos originais | `public/brand`, `public/icons` |
+
+Outras decisões:
+
+- **Títulos em `#131313`** (Text/heading), como nos exemplos de aplicação do guia. O verde fica para ações, links e destaques.
+- **Ilustrações próprias em SVG** só com cores da paleta e a bandeira do orgulho, leves e nítidas em qualquer tela.
 - **Conteúdo com o tom da Lacrei:** pronomes visíveis em cada perfil, recursos de acessibilidade do atendimento, aviso de que a plataforma não atende emergências e contato do CVV (188) no rodapé.
-- **Mobile-first:** todos os estilos partem da tela pequena, e as media queries (`576/768/1024/1280px`) só adicionam colunas e espaçamento.
+- **Mobile-first:** os estilos partem da tela pequena, e as media queries só adicionam colunas e espaçamento nos pontos de quebra do guia.
 
 ### Técnico
 
@@ -278,10 +291,11 @@ git push origin main               # gera um novo deploy de produção sem o pro
 - **Rádios nativos estilizados** em vez de botões com `aria-pressed`: semântica e navegação por setas vêm de graça.
 - **Cabeçalhos de segurança** em `next.config.ts` (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`) e `poweredByHeader: false`.
 
-### Limitações conhecidas
+### Limitações e observações
 
-- O Figma da Marsha é protegido por senha. Os tokens foram conferidos no site público da Lacrei. Vale uma última comparação com o guia do Figma.
-- O logo é um *wordmark* em texto (Nunito 800). Para usar o logotipo oficial, substitua o conteúdo de `Logo` em `Header.tsx` pelo SVG do Figma, mantendo o `aria-label`.
+- **Componentes conferidos só pelos tokens:** acordeão, campo de texto, rádio e card usam os tokens oficiais (bordas, raios, cores, foco e tipografia), mas não foram comparados peça a peça com as páginas do guia. O plano gratuito do Figma limita o número de consultas pelo conector, e o limite acabou antes desses componentes.
+- **Observação para o time de design:** no botão Outline em hover, o texto `#007756` sobre o fundo `#B2DFD0` tem contraste de cerca de 3,8:1. O critério AA pede 4,5:1 para texto de 18px Bold. O site segue o guia, mas vale revisar esse estado no Marsha.
+- **Rodapé sem CNPJ:** o "Footer Institucional" traz o CNPJ da Lacrei. Como este site é um projeto de desafio, e não o site oficial, troquei essa linha por um aviso de que é um projeto do desafio.
 
 ## Checklist dos critérios de aceite
 
@@ -295,7 +309,7 @@ git push origin main               # gera um novo deploy de produção sem o pro
 | Teste com leitor de tela | ✅ | NVDA + Edge, ver [registro](#teste-com-leitor-de-tela) |
 | Performance ≥ 80 no Lighthouse | ✅ | 97–100 |
 | Next.js + TypeScript + Styled-Components | ✅ | |
-| Testes unitários (mín. 3 componentes) | ✅ | 5 componentes + lógica da API, 36 testes |
+| Testes unitários (mín. 3 componentes) | ✅ | 5 componentes + lógica da API, 38 testes |
 | Deploy funcional | ✅ | https://lacrei-desafio-mu.vercel.app |
 | README completo + rollback | ✅ | Este arquivo |
 | Mock de integração com API (opcional) | ✅ | `/api/profissionais` |

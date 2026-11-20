@@ -17,9 +17,8 @@ const Card = styled.article`
   height: 100%;
   padding: ${({ theme }) => theme.space.lg};
   background: ${({ theme }) => theme.colors.white};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.lg};
-  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border: 1px solid ${({ theme }) => theme.colors.borderCard};
+  border-radius: ${({ theme }) => theme.radii.md};
 `;
 
 const Top = styled.div`
@@ -38,7 +37,7 @@ const Avatar = styled.span`
   border-radius: 50%;
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
-  font-weight: ${({ theme }) => theme.fontWeights.extrabold};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
   font-size: ${({ theme }) => theme.fontSizes.lg};
 `;
 
@@ -69,10 +68,10 @@ const Badge = styled.li<{ $tone?: "primary" | "neutral" }>`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme }) => theme.fontWeights.semibold};
   background: ${({ $tone, theme }) =>
-    $tone === "primary" ? theme.colors.primarySurface : theme.colors.lavender};
-  color: ${({ theme }) => theme.colors.text};
+    $tone === "primary" ? theme.colors.primarySurface : theme.colors.surface};
+  color: ${({ theme }) => theme.colors.heading};
   border: 1px solid
-    ${({ $tone, theme }) => ($tone === "primary" ? theme.colors.primaryLight : "#E6D9F2")};
+    ${({ $tone, theme }) => ($tone === "primary" ? theme.colors.primaryLight : theme.colors.border)};
 `;
 
 const Details = styled.div`

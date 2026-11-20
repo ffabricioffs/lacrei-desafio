@@ -34,13 +34,13 @@ const Breadcrumb = styled.nav`
   }
 `;
 
+/** Headline-xl (1 por página): 32px no mobile → 48px no desktop */
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxl};
-  color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.space.sm};
 
-  ${media.md} {
-    font-size: 2.5rem;
+  ${media.lg} {
+    font-size: ${({ theme }) => theme.fontSizes.display};
   }
 `;
 
