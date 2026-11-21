@@ -125,7 +125,7 @@ O que foi aplicado:
 
 ### Teste com leitor de tela
 
-Teste manual feito em **20/11/2026** com **NVDA + Microsoft Edge (Windows 11)** no deploy de produção, acompanhando o Visualizador de fala do NVDA.
+Teste manual feito em **20/11/2026** e repetido em **21/11/2026**, depois do alinhamento ao Figma, com **NVDA + Microsoft Edge (Windows 11)** no deploy de produção, acompanhando o Visualizador de fala do NVDA.
 
 | Verificação | O que o NVDA anunciou | Resultado |
 | --- | --- | --- |
@@ -140,11 +140,15 @@ Teste manual feito em **20/11/2026** com **NVDA + Microsoft Edge (Windows 11)** 
 | Filtro de modalidade | "Modalidade de atendimento, grupo, Todas, botão de opção…"; ao marcar, anuncia o novo total | ✅ |
 | "Ver detalhes" do card | "Ver detalhes de Dre. Caio Nascimento, botão, recolhido" → "expandido" | ✅ (após correção) |
 | Link externo | "Oferecer atendimento (abre em nova aba)" | ✅ (após correção) |
+| Logo oficial (SVG) no header | "link, Lacrei Saúde, ir para a página inicial": a imagem não interfere no nome do link | ✅ |
+| Redes sociais (links só com ícone) | "Facebook da Lacrei Saúde (abre em nova aba)", "Instagram…", "LinkedIn…" e "E-mail da Lacrei Saúde", este sem aviso de nova aba | ✅ |
+| Lista de links (Insert + F7) | 25 links, todos com nome claro; os externos com "(abre em nova aba)" | ✅ |
+| "Voltar ao topo" | "Voltar ao topo; mesma página". Ao ativar, a página volta ao topo e o cursor do NVDA vai para o banner/logo | ✅ |
 
 **Problemas encontrados no teste manual e corrigidos:**
 
 1. **Palavras grudadas no texto oculto.** O NVDA lia "Ver detalhes**de** Dre. Caio" e "Oferecer atendimento**(abre em nova aba)**". O texto exclusivo para leitores de tela usa `position: absolute`, e o navegador descartava o espaço inicial ao montar o nome acessível. A correção foi começar esse texto com espaço não separável (`\u00A0`), e um teste de regressão garante isso.
-2. **Leitura longa ao pular para o conteúdo.** Com `tabIndex={-1}` no `<main>`, o NVDA lia a página inteira ao ativar "Pular para o conteúdo". O `tabindex` foi removido: o link de âncora já move o ponto de partida da navegação por teclado para o início do conteúdo. _(Correção feita após a sessão de teste; vale uma reconferência rápida com o NVDA.)_
+2. **Leitura longa ao pular para o conteúdo.** Com `tabIndex={-1}` no `<main>`, o NVDA lia a página inteira ao ativar "Pular para o conteúdo". O `tabindex` foi removido: o link de âncora já move o ponto de partida da navegação por teclado para o início do conteúdo. Reconferido em 21/11: ao ativar o link, o NVDA lê apenas "título, nível 1, Cuidado em saúde com respeito e segurança".
 
 **Observações (não são defeitos):**
 
