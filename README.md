@@ -1,5 +1,10 @@
 # Lacrei Saúde · Desafio Técnico Front-end
 
+[![CI](https://github.com/ffabricioffs/lacrei-desafio/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ffabricioffs/lacrei-desafio/actions/workflows/ci.yml)
+![Lighthouse Acessibilidade](https://img.shields.io/badge/Lighthouse%20a11y-100-brightgreen)
+![Lighthouse Performance](https://img.shields.io/badge/Lighthouse%20performance-96--100-brightgreen)
+![Testes](https://img.shields.io/badge/testes-38%20passando-brightgreen)
+
 Duas páginas interativas, acessíveis e responsivas que seguem a identidade visual da Lacrei Saúde (Marsha Design System), construídas com **Next.js 16 + TypeScript + Styled-Components**.
 
 - **Deploy:** https://lacrei-desafio-mu.vercel.app
@@ -258,7 +263,9 @@ git revert <hash-do-commit-com-problema>
 git push origin main               # gera um novo deploy de produção sem o problema
 ```
 
-**Fluxo seguro proposto (Preview Deploy):** toda mudança entra por Pull Request → o CI (testes + Lighthouse) precisa passar → o Vercel gera um Preview Deploy para revisão visual e de acessibilidade → só então o merge na `main` publica em produção. Se algo escapar, usa-se o **Instant Rollback** (opção 1) para estancar na hora e o `git revert` (opção 3) para corrigir o histórico.
+**Fluxo seguro adotado (Preview Deploy):** toda mudança entra por Pull Request → o CI (testes + Lighthouse) precisa passar → o Vercel gera um Preview Deploy para revisão visual e de acessibilidade → só então o merge na `main` publica em produção. Se algo escapar, usa-se o **Instant Rollback** (opção 1) para estancar na hora e o `git revert` (opção 3) para corrigir o histórico.
+
+Esse fluxo é garantido por uma **regra de proteção da branch `main`** no GitHub: só entra código por Pull Request, os jobs "Lint, tipos, testes e build" e "Lighthouse" precisam passar, a branch precisa estar atualizada e as conversas resolvidas, e force-push e exclusão ficam bloqueados. Este próprio README ganhou os selos de status por um PR que seguiu esse caminho.
 
 > Observações: após um Instant Rollback, o Vercel desliga a atribuição automática do domínio de produção. Assim, o próximo push na `main` não substitui a versão restaurada sem querer. Para voltar ao fluxo normal, use **Undo Rollback** no painel ou promova um deploy (`vercel promote`). No plano Hobby, o rollback fica limitado ao deploy de produção imediatamente anterior.
 
