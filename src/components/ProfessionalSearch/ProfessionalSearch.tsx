@@ -6,7 +6,12 @@ import { Button } from "@/components/Button/Button";
 import { ProfessionalCard } from "@/components/ProfessionalCard/ProfessionalCard";
 import { fetchProfessionals } from "@/services/professionals";
 import { media } from "@/styles/theme";
-import type { Modality, Professional, ProfessionalFilters } from "@/types/professional";
+import type {
+  Modality,
+  Professional,
+  ProfessionalFilters,
+  ProfessionalsResponse,
+} from "@/types/professional";
 
 type Status = "loading" | "success" | "error";
 
@@ -123,8 +128,8 @@ const Chip = styled.label`
   }
 
   &:has(input:focus-visible) {
-    outline: 3px solid ${({ theme }) => theme.colors.focus};
-    outline-offset: 3px;
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 4px;
   }
 `;
 
@@ -198,14 +203,25 @@ const Feedback = styled.div<{ $tone: "error" | "neutral" }>`
     ${({ $tone, theme }) => ($tone === "error" ? theme.colors.error : theme.colors.info)};
 `;
 
-export function ProfessionalSearch() {
+interface ProfessionalSearchProps {
+  /**
+   * Resultado inicial (sem filtros) já calculado no servidor. Com ele, o HTML
+   * chega com a lista pronta: funciona sem JavaScript, para robôs e
+   * ferramentas de verificação, e evita uma requisição no carregamento.
+   */
+  initialData?: ProfessionalsResponse;
+}
+
+export function ProfessionalSearch({ initialData }: ProfessionalSearchProps = {}) {
   const [draftQuery, setDraftQuery] = useState("");
   const [filters, setFilters] = useState<Required<ProfessionalFilters>>(EMPTY_FILTERS);
-  const [status, setStatus] = useState<Status>("loading");
-  const [results, setResults] = useState<Professional[]>([]);
-  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [status, setStatus] = useState<Status>(initialData ? "success" : "loading");
+  const [results, setResults] = useState<Professional[]>(initialData?.data ?? []);
+  const [specialties, setSpecialties] = useState<string[]>(initialData?.specialties ?? []);
   const [attempt, setAttempt] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Se o servidor já mandou o resultado inicial, a primeira busca é dispensada
+  const skipInitialFetch = useRef(Boolean(initialData));
 
   const queryId = useId();
   const hintId = useId();
@@ -213,6 +229,10 @@ export function ProfessionalSearch() {
   const modalityName = useId();
 
   useEffect(() => {
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false;
+      return;
+    }
     const controller = new AbortController();
 
     fetchProfessionals(filters, controller.signal)
