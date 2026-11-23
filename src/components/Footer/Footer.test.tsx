@@ -63,6 +63,17 @@ describe("Footer", () => {
     expect(screen.getByRole("link", { name: "Voltar ao topo" })).toHaveAttribute("href", "#topo");
   });
 
+  it("identifica o commit publicado com link para o GitHub", () => {
+    renderWithTheme(<Footer />);
+    const versao = screen.getByTestId("versao-publicada");
+    const link = within(versao).getByRole("link");
+    expect(link).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/github\.com\/ffabricioffs\/lacrei-desafio\/commit\//),
+    );
+    expect(link).toHaveTextContent(/commit \S+/);
+  });
+
   it("não tem violações de acessibilidade (axe)", async () => {
     const { container } = renderWithTheme(<Footer />);
     expect(await axe(container)).toHaveNoViolations();

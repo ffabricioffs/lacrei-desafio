@@ -5,6 +5,8 @@ import Link from "next/link";
 import styled from "styled-components";
 import { Container } from "@/components/ui/Layout";
 import { media } from "@/styles/theme";
+import { interactionStates as states } from "@/styles/interactionStates";
+import { buildInfo, REPO_URL, shortCommit } from "@/lib/buildInfo";
 
 const LACREI_URL = "https://lacreisaude.com.br";
 const NEW_TAB_HINT = " (abre em nova aba)";
@@ -128,12 +130,13 @@ const SocialLink = styled.a`
   height: 48px;
   border-radius: ${({ theme }) => theme.radii.md};
 
+  /* Ícone verde: fundos mais claros que no botão comum para manter ≥ 3:1 */
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryLight};
+    background: ${states.socialIcon.hover.bg};
   }
 
   &:active {
-    background: ${({ theme }) => theme.colors.primaryPressedSurface};
+    background: ${states.socialIcon.active.bg};
   }
 `;
 
@@ -189,14 +192,14 @@ const linkStyles = `
 
 const InternalLink = styled(Link)`
   ${linkStyles}
-  color: ${({ theme }) => theme.colors.text};
-  &:hover { color: ${({ theme }) => theme.colors.primaryActive}; }
+  color: ${states.footerLink.default.fg};
+  &:hover { color: ${states.footerLink.hover.fg}; }
 `;
 
 const ExternalLink = styled.a`
   ${linkStyles}
-  color: ${({ theme }) => theme.colors.text};
-  &:hover { color: ${({ theme }) => theme.colors.primaryActive}; }
+  color: ${states.footerLink.default.fg};
+  &:hover { color: ${states.footerLink.hover.fg}; }
 `;
 
 const Bottom = styled.div`
@@ -239,11 +242,11 @@ const BackToTop = styled.a`
   box-shadow: ${({ theme }) => theme.shadows.button};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryLight};
+    background: ${states.backToTop.hover.bg};
   }
 
   &:active {
-    background: ${({ theme }) => theme.colors.primaryPressedSurface};
+    background: ${states.backToTop.active.bg};
     border-color: ${({ theme }) => theme.colors.primaryActive};
   }
 `;
@@ -327,6 +330,13 @@ export function Footer() {
                 </p>
               </NoticeGroup>
               <p>© 2026 · Projeto desenvolvido para o desafio técnico de Front-end da Lacrei Saúde.</p>
+              <p data-testid="versao-publicada">
+                Versão publicada:{" "}
+                <a href={`${REPO_URL}/commit/${buildInfo.commit}`} target="_blank" rel="noopener noreferrer">
+                  {`commit ${shortCommit(buildInfo.commit)}`}
+                  <span className="visually-hidden">{NEW_TAB_HINT}</span>
+                </a>
+              </p>
             </Notices>
 
             <BackToTop href="#topo">
