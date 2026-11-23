@@ -1,0 +1,108 @@
+name: Produção
+
+# Roda quando a Vercel marca o status "Vercel" de um commit da main como
+# concluído (é assim que a integração da Vercel avisa o GitHub do deploy).
+# Verifica o domínio público (sem login), confere que ele serve exatamente o
+# commit implantado e mede o Lighthouse na Vercel de verdade.
+on:
+  status:
+  workflow_dispatch:
+
+env:
+  SITE: https://lacrei-desafio-mu.vercel.app
+
+jobs:
+  verificar:
+    name: Verificar produção na Vercel
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.context == 'Vercel' &&
+       github.event.state == 'success' &&
+       contains(github.event.branches.*.name, 'main'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.sha || github.sha }}
+
+      - name: Commit esperado
+        id: esperado
+        shell: bash
+        run: |
+          SHA="${{ github.event.sha }}"
+          if [ -z "$SHA" ]; then SHA="$(git rev-parse HEAD)"; fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Commit esperado em produção: $SHA"
+
+      - name: Aguarda o domínio público servir o commit implantado
+        shell: bash
+        run: |
+          for i in $(seq 1 30); do
+            PUBLICADO="$(curl -fsS "$SITE/api/versao" | node -pe 'JSON.parse(require("fs").readFileSync(0)).commit' || true)"
+            echo "tentativa $i: domínio serve $PUBLICADO"
+            if [ "$PUBLICADO" = "${{ steps.esperado.outputs.sha }}" ]; then exit 0; fi
+            sleep 10
+          done
+          echo "::error::O domínio público não passou a servir o commit esperado."
+          exit 1
+
+      - name: Confere páginas, API e cabeçalhos (sem login, como visitante)
+        shell: bash
+        run: |
+          set -o pipefail
+          check() {
+            local path="$1" expect="$2"
+            local body status
+            status=$(curl -sS -o /tmp/body -w "%{http_code}" "$SITE$path")
+            body=$(cat /tmp/body)
+            if [ "$status" != "200" ] || ! grep -q "$expect" /tmp/body; then
+              echo "::error::$path respondeu $status ou não contém '$expect'"; exit 1
+            fi
+            echo "| \`$path\` | $status | contém “$expect” |" >> /tmp/tabela
+          }
+          echo "| Caminho | HTTP | Conteúdo verificado |" > /tmp/tabela
+          echo "| --- | --- | --- |" >> /tmp/tabela
+          check "/" "Cuidado em saúde com respeito e segurança"
+          check "/profissionais" "Encontre profissionais de saúde"
+          check "/profissionais" "10 profissionais encontrados"
+          check "/api/profissionais?modalidade=online" '"total":8'
+          check "/api/versao" "${{ steps.esperado.outputs.sha }}"
+          NAO=$(curl -sS -o /dev/null -w "%{http_code}" "$SITE/pagina-que-nao-existe")
+          [ "$NAO" = "404" ] || { echo "::error::404 esperado, veio $NAO"; exit 1; }
+          echo "| \`/pagina-que-nao-existe\` | $NAO | página 404 |" >> /tmp/tabela
+          curl -sSI "$SITE/" | grep -iE "^(x-frame-options|x-content-type-options|referrer-policy|permissions-policy):" | tee /tmp/headers
+          {
+            echo "### Produção verificada como visitante (sem login)"
+            echo
+            echo "- Domínio: $SITE"
+            echo "- Commit implantado e servido: \`${{ steps.esperado.outputs.sha }}\`"
+            echo "- Verificado em: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            cat /tmp/tabela
+            echo
+            echo "Cabeçalhos de segurança:"
+            echo '```'
+            cat /tmp/headers
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Lighthouse no domínio de produção (Vercel)
+        run: npx -y @lhci/cli@0.16.x autorun --config=./lighthouserc.producao.json
+
+      - name: Salva relatórios em arquivo
+        if: always()
+        run: npx -y @lhci/cli@0.16.x upload --config=./lighthouserc.producao.json --target=filesystem --outputDir=./lighthouse-producao
+
+      - name: Resumo do Lighthouse
+        if: always()
+        env:
+          GITHUB_SHA: ${{ steps.esperado.outputs.sha }}
+        run: node scripts/lhci-resumo.mjs ./lighthouse-producao "Lighthouse — produção na Vercel (mobile, 3 execuções por página)" .lighthouseci/links.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Anexa relatórios do Lighthouse em produção
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-producao-${{ steps.esperado.outputs.sha }}
+          path: lighthouse-producao/
+          retention-days: 30
