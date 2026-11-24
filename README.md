@@ -57,7 +57,7 @@ mais do que ela faz. **Documentado** = procedimento descrito, mas não executado
 | 1 | Contraste do hover (secundário, ghost e navegação) | O texto no hover passou de `#007756` para `#014C37` sobre o mesmo fundo `#B2DFD0`: de 3,81:1 para **6,87:1**. O link do menu em repouso usa `#007756` sobre o fundo do header (**5,45:1**). Todos os pares de cor dos estados interativos ficam num só arquivo, testado contra o mínimo WCAG | [`contraste.md`](docs/evidencias/746117b/contraste.md) (medido no navegador, 33/33) · `src/styles/interactionStates.ts` + teste |
 | 2 | Saída dos testes e Lighthouse das duas páginas, com o commit | Saída completa do Jest e os 4 relatórios HTML (2 páginas × mobile/desktop) do commit `746117b`. O CI também guarda a saída dos testes e os relatórios Lighthouse de **cada** commit como artefatos com o SHA no nome | [`testes/jest-saida.txt`](docs/evidencias/746117b/testes/jest-saida.txt) · [`lighthouse/`](docs/evidencias/746117b/README.md#2-lighthouse-duas-páginas-mobile-e-desktop) · [execuções do CI](https://github.com/ffabricioffs/lacrei-desafio/actions/workflows/ci.yml) |
 | 3 | Evidências de responsividade e comparação com o Marsha | Capturas de página inteira em 360, 375, 414, 768, 1024 e 1440px, com rolagem horizontal, modo do menu, tamanho do `h1` e alvos pequenos medidos. Conferência de 43 itens (estilo computado × valor do Figma) e capturas dos componentes | [Responsividade](docs/evidencias/746117b/README.md#3-responsividade-) · [`marsha.md`](docs/evidencias/746117b/marsha.md) |
-| 4 | Funcionamento do deploy e commit publicado | O rodapé e `/api/versao` mostram o commit em produção. O workflow **Produção** roda quando a Vercel conclui o deploy da `main`: confere que `/api/versao` responde com o commit esperado, testa as rotas e roda o Lighthouse na URL pública. A lista de `/profissionais` passou a vir no HTML, para ferramentas que não executam JavaScript | [Build e deploy](#build-e-deploy-vercel) · [execuções do workflow Produção](https://github.com/ffabricioffs/lacrei-desafio/actions/workflows/producao.yml) |
+| 4 | Funcionamento do deploy e commit publicado | O rodapé e `/api/versao` mostram o commit em produção. O workflow **Produção** roda quando a Vercel conclui o deploy da `main`: confere que `/api/versao` responde com o commit esperado, testa as rotas e roda o Lighthouse na URL pública. A lista de `/profissionais` passou a vir no HTML, para ferramentas que não executam JavaScript | [Build e deploy](#build-e-deploy-vercel) · [verificação do commit `689f295`](https://github.com/ffabricioffs/lacrei-desafio/actions/runs/45296486170) · [todas as execuções](https://github.com/ffabricioffs/lacrei-desafio/actions/workflows/producao.yml) |
 | 5 | Separar resultados medidos de expectativas | Este README marca o que foi **medido** (com commit e arquivo), o que está **configurado** e o que está apenas **documentado**. Saíram a frase sobre a Vercel "tender a números melhores" e a afirmação de que o fluxo seria "garantido" pela proteção de branch | [Performance](#performance) · [Rollback](#rollback) |
 
 Além disso, a medição apontou duas diferenças pequenas em relação ao guia, já corrigidas: botões com 55px de
@@ -209,6 +209,19 @@ pelo workflow [Produção](https://github.com/ffabricioffs/lacrei-desafio/action
 deploy da `main` (3 execuções por página, perfil mobile do Lighthouse, a partir de um runner do GitHub). O resumo de
 cada execução traz a tabela com os números e o commit, e os relatórios ficam como artefato
 `lighthouse-producao-<commit>`. Os números da Vercel variam com a rede entre o runner e a CDN.
+
+**Medido na Vercel** ([execução #2 do workflow Produção](https://github.com/ffabricioffs/lacrei-desafio/actions/runs/45296486170), commit `689f295`, 24/11/2026 00:21 UTC,
+Lighthouse mobile, mediana de 3 execuções):
+
+| Página | Performance | Acessibilidade | Boas práticas | SEO |
+| --- | --- | --- | --- | --- |
+| `/` | 100 | 100 | 100 | 100 |
+| `/profissionais` | 100 | 100 | 100 | 100 |
+
+Na mesma execução, todas as rotas responderam como esperado para um visitante sem login: `/` e `/profissionais`
+com 200 e o conteúdo no HTML (inclusive "10 profissionais encontrados"), a API com 8 resultados online,
+`/api/versao` com o commit `689f295` e uma rota inexistente com 404. Os deploys seguintes são verificados da mesma
+forma; os números acima não substituem os da execução mais recente.
 
 - **Páginas pré-renderizadas** (estáticas) no build. Só a API roda sob demanda.
 - **Imagens:** `next/image` com `width`/`height` (sem layout shift); a ilustração abaixo da dobra usa `loading="lazy"`; a do hero usa `loading="eager"` + `fetchPriority="high"` por ser candidata a LCP. As ilustrações são SVGs leves (menos de 2 KB cada).
@@ -425,7 +438,7 @@ Outras decisões:
 | Responsividade mobile-first | ✅ | Breakpoints em `styles/theme.ts`; capturas e medições em 6 larguras: [evidências](docs/evidencias/746117b/README.md#3-responsividade-) |
 | Acessibilidade ≥ 90 no Lighthouse | ✅ medido | 100 nas duas páginas, mobile e desktop ([relatórios](docs/evidencias/746117b/README.md#2-lighthouse-duas-páginas-mobile-e-desktop)) |
 | Teste com leitor de tela | ✅ | NVDA + Edge, ver [registro](#teste-com-leitor-de-tela) |
-| Performance ≥ 80 no Lighthouse | ✅ medido | 97–100 no build local ([relatórios](docs/evidencias/746117b/README.md#2-lighthouse-duas-páginas-mobile-e-desktop)); na Vercel, ver workflow Produção |
+| Performance ≥ 80 no Lighthouse | ✅ medido | 97–100 no build local ([relatórios](docs/evidencias/746117b/README.md#2-lighthouse-duas-páginas-mobile-e-desktop)); 100 na Vercel ([execução](https://github.com/ffabricioffs/lacrei-desafio/actions/runs/45296486170)) |
 | Next.js + TypeScript + Styled-Components | ✅ | |
 | Testes unitários (mín. 3 componentes) | ✅ medido | 5 componentes + lógica da API + contraste, 71 testes ([saída](docs/evidencias/746117b/testes/jest-saida.txt)) |
 | Deploy funcional | ✅ | https://lacrei-desafio-mu.vercel.app · commit no rodapé e em `/api/versao` · verificado pelo workflow Produção |
