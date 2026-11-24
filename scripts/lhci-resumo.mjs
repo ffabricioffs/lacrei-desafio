@@ -23,7 +23,8 @@ const rows = manifest
     return `| ${run.url} | ${pct(s.performance)} | ${pct(s.accessibility)} | ${pct(s["best-practices"])} | ${pct(s.seo)} | ${link} |`;
   });
 
-const commit = process.env.GITHUB_SHA ? process.env.GITHUB_SHA.slice(0, 7) : "local";
+const sha = process.env.COMMIT_SHA || process.env.GITHUB_SHA;
+const commit = sha ? sha.slice(0, 7) : "local";
 console.log(`### ${title}\n`);
 console.log(`Commit avaliado: \`${commit}\` · execução representativa (mediana de ${manifest.length / Math.max(rows.length, 1)} execuções por URL)\n`);
 console.log("| URL | Performance | Acessibilidade | Boas práticas | SEO | Relatório |");

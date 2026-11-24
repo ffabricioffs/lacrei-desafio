@@ -96,7 +96,7 @@ jobs:
       - name: Resumo do Lighthouse
         if: always()
         env:
-          GITHUB_SHA: ${{ steps.esperado.outputs.sha }}
+          COMMIT_SHA: ${{ steps.esperado.outputs.sha }}
         run: node scripts/lhci-resumo.mjs ./lighthouse-producao "Lighthouse — produção na Vercel (mobile, 3 execuções por página)" .lighthouseci/links.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Anexa relatórios do Lighthouse em produção

@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+# Em PRs, o GitHub roda por padrão num commit de merge temporário. Aqui testamos o commit
+# da branch do PR, para que o SHA nos resumos e artefatos seja o mesmo que aparece no PR.
+env:
+  COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -15,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_SHA }}
 
       - uses: actions/setup-node@v4
         with:
@@ -40,20 +47,20 @@ jobs:
           {
             echo "### Testes (Jest)"
             echo
-            echo "Commit avaliado: \`${GITHUB_SHA::7}\`"
+            echo "Commit avaliado: \`${COMMIT_SHA::7}\`"
             echo
             echo '```'
             grep -E "^(Tests|Test Suites|Snapshots|Time):" jest-saida.txt || true
             echo '```'
             echo
-            echo "Saída completa e relatório de cobertura no artefato **testes-${GITHUB_SHA}**."
+            echo "Saída completa e relatório de cobertura no artefato **testes-${COMMIT_SHA}**."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Anexa saída dos testes e cobertura
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: testes-${{ github.sha }}
+          name: testes-${{ env.COMMIT_SHA }}
           path: |
             jest-saida.txt
             coverage/
@@ -65,6 +72,8 @@ jobs:
     needs: qualidade
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_SHA }}
 
       - uses: actions/setup-node@v4
         with:
@@ -91,6 +100,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-ci-${{ github.sha }}
+          name: lighthouse-ci-${{ env.COMMIT_SHA }}
           path: lighthouse-relatorios/
           retention-days: 30
