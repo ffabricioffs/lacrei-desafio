@@ -1,0 +1,45 @@
+# Commit 746117bde478944ab34e2d393459ba229cd66dda
+# Gerado em 2026-11-24T00:04:34.901Z
+
+-------------------------------|---------|----------|---------|---------|-------------------
+File                           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------------|---------|----------|---------|---------|-------------------
+All files                      |    77.6 |    96.49 |   91.97 |    77.6 |                   
+ components                    |       0 |        0 |       0 |       0 |                   
+  Providers.tsx                |       0 |        0 |       0 |       0 | 1-17              
+ components/Accordion          |     100 |      100 |     100 |     100 |                   
+  Accordion.tsx                |     100 |      100 |     100 |     100 |                   
+ components/Button             |    97.2 |    96.77 |     100 |    97.2 |                   
+  Button.tsx                   |    97.2 |    96.77 |     100 |    97.2 | 203-208           
+ components/Footer             |     100 |      100 |     100 |     100 |                   
+  Footer.tsx                   |     100 |      100 |     100 |     100 |                   
+ components/Header             |   98.88 |     97.5 |   94.73 |   98.88 |                   
+  Header.tsx                   |   98.88 |     97.5 |   94.73 |   98.88 | 204-206           
+ components/Home               |       0 |        0 |       0 |       0 |                   
+  HomeSections.tsx             |       0 |        0 |       0 |       0 | 1-327             
+ components/ProfessionalCard   |     100 |      100 |     100 |     100 |                   
+  ProfessionalCard.tsx         |     100 |      100 |     100 |     100 |                   
+ components/ProfessionalSearch |   99.75 |     96.2 |   96.96 |   99.75 |                   
+  ProfessionalSearch.tsx       |   99.75 |     96.2 |   96.96 |   99.75 | 283               
+ components/ProfessionalsPage  |       0 |        0 |       0 |       0 |                   
+  ProfessionalsIntro.tsx       |       0 |        0 |       0 |       0 | 1-95              
+ components/ui                 |   63.91 |    85.71 |   45.45 |   63.91 |                   
+  Layout.tsx                   |     100 |      100 |      50 |     100 |                   
+  SkipLink.tsx                 |       0 |        0 |       0 |       0 | 1-35              
+ lib                           |     100 |      100 |     100 |     100 |                   
+  professionals.ts             |     100 |      100 |     100 |     100 |                   
+ services                      |     100 |     87.5 |     100 |     100 |                   
+  professionals.ts             |     100 |     87.5 |     100 |     100 | 12                
+-------------------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 77.6% ( 1677/2161 )
+Branches     : 96.49% ( 275/285 )
+Functions    : 91.97% ( 126/137 )
+Lines        : 77.6% ( 1677/2161 )
+================================================================================
+Test Suites: 7 passed, 7 total
+Tests:       71 passed, 71 total
+Snapshots:   0 total
+Time:        8.932 s, estimated 9 s
+Ran all test suites.

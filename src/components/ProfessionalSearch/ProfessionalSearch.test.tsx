@@ -47,6 +47,22 @@ describe("ProfessionalSearch", () => {
     expect(fetchMock).toHaveBeenCalledWith("/api/profissionais", expect.anything());
   });
 
+  it("com o resultado inicial vindo do servidor, mostra a lista sem esperar a API", async () => {
+    const initialData: ProfessionalsResponse = {
+      data: professionals,
+      total: professionals.length,
+      specialties: listSpecialties(professionals),
+    };
+    renderWithTheme(<ProfessionalSearch initialData={initialData} />);
+
+    // Já no primeiro render: nada de "Carregando…"
+    expect(screen.getByRole("status")).toHaveTextContent(
+      `${professionals.length} profissionais encontrados`,
+    );
+    expect(screen.getAllByRole("article")).toHaveLength(professionals.length);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("busca por texto ao enviar o formulário, sem diferenciar acentos", async () => {
     const user = userEvent.setup();
     renderWithTheme(<ProfessionalSearch />);

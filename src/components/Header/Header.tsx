@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { Container } from "@/components/ui/Layout";
 import { ButtonLink } from "@/components/Button/Button";
 import { media } from "@/styles/theme";
+import { interactionStates as states } from "@/styles/interactionStates";
 
 export const NAV_ITEMS = [
   { href: "/", label: "Início" },
@@ -25,7 +26,8 @@ const Bar = styled.header`
   top: 0;
   z-index: 100;
   background: ${({ theme }) => theme.colors.gradientSubtle};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.primarySurface};
+  /* Linha de separação sem somar altura (o header do guia tem 96px exatos) */
+  box-shadow: 0 1px 0 ${({ theme }) => theme.colors.primarySurface};
 `;
 
 const Inner = styled(Container)`
@@ -69,16 +71,16 @@ const MenuToggle = styled.button`
   height: 48px;
   border: 0;
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  background: ${states.menuToggle.default.bg};
+  color: ${states.menuToggle.default.fg};
   box-shadow: ${({ theme }) => theme.shadows.button};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryHover};
+    background: ${states.menuToggle.hover.bg};
   }
 
   &[aria-expanded="true"] {
-    background: ${({ theme }) => theme.colors.primaryActive};
+    background: ${states.menuToggle.expanded.bg};
   }
 
   &:focus-visible {
@@ -140,30 +142,34 @@ const NavList = styled.ul`
   }
 `;
 
-/** Button Link do Marsha: texto emerald-60 Bold 18px, hover com fundo emerald-20 */
+/**
+ * Button Link do Marsha (Bold 18px, hover com fundo emerald-20).
+ * Texto em emerald-70 porque o fundo do header é esverdeado (emerald-60 ficaria
+ * em 4,43:1) e hover em emerald-80 (6,87:1). Ver styles/interactionStates.ts.
+ */
 const NavLink = styled(Link)`
   display: flex;
   align-items: center;
   min-height: 48px;
-  padding: 12px 16px;
+  padding: 0 16px;
   border-radius: ${({ theme }) => theme.radii.md};
   font-size: ${({ theme }) => theme.fontSizes.lg};
 
   ${media.lg} {
-    padding: 12px;
+    padding: 0 12px;
   }
 
   ${media.xl} {
-    padding: 12px 16px;
+    padding: 0 16px;
   }
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${states.navLink.default.fg};
   text-decoration: none;
   white-space: nowrap;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primaryLight};
-    color: ${({ theme }) => theme.colors.primaryHover};
+    background: ${states.navLink.hover.bg};
+    color: ${states.navLink.hover.fg};
   }
 
   &[aria-current="page"] {

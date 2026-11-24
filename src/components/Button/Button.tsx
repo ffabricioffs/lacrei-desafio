@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import styled, { css } from "styled-components";
+import { interactionStates as states } from "@/styles/interactionStates";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 export type ButtonSize = "sm" | "md";
@@ -17,9 +18,10 @@ interface StyleProps {
  * Botão "ButtonDefault" do Marsha Design System (handoff do Figma):
  * altura 48px, padding 12px 32px, raio 8px, Nunito Bold 18px/27px.
  * - primary (Solid): emerald-60; hover emerald-70; pressionado emerald-80
- * - secondary (Outline): borda 2px emerald-60; hover fundo emerald-20 e
- *   borda emerald-50; pressionado fundo emerald-30 e borda emerald-80
- * - ghost (Button Link): só texto; hover fundo emerald-20
+ * - secondary (Outline): borda 2px emerald-60; hover fundo emerald-20,
+ *   borda emerald-50 e texto emerald-80; pressionado fundo emerald-30 e borda emerald-80
+ * - ghost (Button Link): só texto; hover fundo emerald-20 e texto emerald-80
+ *   (o Figma usa texto emerald-70 no hover, 3,81:1; ver styles/interactionStates.ts)
  * - foco: anel 2px blue-60 afastado 4px do botão (color-border-focus-info)
  * - desabilitado: fundo gray-30 e texto gray-60
  */
@@ -28,8 +30,10 @@ const buttonStyles = css<StyleProps>`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.space.sm};
+  /* 48px como no handoff: a altura vem do min-height, não do padding vertical
+     (12px + 27px + 12px + borda passaria de 48). Texto longo ainda cresce. */
   min-height: 48px;
-  padding: ${({ $size }) => ($size === "sm" ? "12px 24px" : "12px 32px")};
+  padding: ${({ $size }) => ($size === "sm" ? "0 24px" : "0 32px")};
   width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
   border: 2px solid transparent;
   border-radius: ${({ theme }) => theme.radii.md};
@@ -55,53 +59,55 @@ const buttonStyles = css<StyleProps>`
     switch ($variant) {
       case "secondary":
         return css`
-          background: ${theme.colors.white};
+          background: ${states.buttonSecondary.default.bg};
           border-color: ${theme.colors.primary};
-          color: ${theme.colors.primary};
+          color: ${states.buttonSecondary.default.fg};
           box-shadow: ${theme.shadows.button};
 
           &:hover:not(:disabled) {
-            background: ${theme.colors.primaryLight};
+            background: ${states.buttonSecondary.hover.bg};
             border-color: ${theme.colors.primaryBorderHover};
-            color: ${theme.colors.primaryHover};
+            color: ${states.buttonSecondary.hover.fg};
           }
 
           &:active:not(:disabled) {
-            background: ${theme.colors.primaryPressedSurface};
+            background: ${states.buttonSecondary.active.bg};
             border-color: ${theme.colors.primaryActive};
-            color: ${theme.colors.primaryActive};
+            color: ${states.buttonSecondary.active.fg};
           }
         `;
       case "ghost":
         return css`
           background: transparent;
-          color: ${theme.colors.primary};
+          color: ${states.buttonGhost.default.fg};
 
           &:hover:not(:disabled) {
-            background: ${theme.colors.primaryLight};
-            color: ${theme.colors.primaryHover};
+            background: ${states.buttonGhost.hover.bg};
+            color: ${states.buttonGhost.hover.fg};
           }
 
           &:active:not(:disabled) {
-            background: ${theme.colors.primaryPressedSurface};
-            color: ${theme.colors.primaryActive};
+            background: ${states.buttonGhost.active.bg};
+            color: ${states.buttonGhost.active.fg};
           }
         `;
       default:
         return css`
-          background: ${theme.colors.primary};
-          border-color: ${theme.colors.primary};
-          color: ${theme.colors.white};
+          background: ${states.buttonPrimary.default.bg};
+          border-color: ${states.buttonPrimary.default.bg};
+          color: ${states.buttonPrimary.default.fg};
           box-shadow: ${theme.shadows.button};
 
           &:hover:not(:disabled) {
-            background: ${theme.colors.primaryHover};
-            border-color: ${theme.colors.primaryHover};
+            background: ${states.buttonPrimary.hover.bg};
+            border-color: ${states.buttonPrimary.hover.bg};
+            color: ${states.buttonPrimary.hover.fg};
           }
 
           &:active:not(:disabled) {
-            background: ${theme.colors.primaryActive};
-            border-color: ${theme.colors.primaryActive};
+            background: ${states.buttonPrimary.active.bg};
+            border-color: ${states.buttonPrimary.active.bg};
+            color: ${states.buttonPrimary.active.fg};
           }
         `;
     }

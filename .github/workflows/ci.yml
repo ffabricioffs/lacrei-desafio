@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+# Em PRs, o GitHub roda por padrão num commit de merge temporário. Aqui testamos o commit
+# da branch do PR, para que o SHA nos resumos e artefatos seja o mesmo que aparece no PR.
+env:
+  COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -15,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_SHA }}
 
       - uses: actions/setup-node@v4
         with:
@@ -24,10 +31,40 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run test:coverage -- --ci
+
+      - name: Testes com cobertura (saída salva como evidência)
+        shell: bash
+        run: npm run test:coverage -- --ci --verbose 2>&1 | tee jest-saida.txt
+
       - run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Resumo dos testes
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Testes (Jest)"
+            echo
+            echo "Commit avaliado: \`${COMMIT_SHA::7}\`"
+            echo
+            echo '```'
+            grep -E "^(Tests|Test Suites|Snapshots|Time):" jest-saida.txt || true
+            echo '```'
+            echo
+            echo "Saída completa e relatório de cobertura no artefato **testes-${COMMIT_SHA}**."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Anexa saída dos testes e cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testes-${{ env.COMMIT_SHA }}
+          path: |
+            jest-saida.txt
+            coverage/
+          retention-days: 30
 
   lighthouse:
     name: Lighthouse (a11y ≥ 90, performance ≥ 80)
@@ -35,6 +72,8 @@ jobs:
     needs: qualidade
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_SHA }}
 
       - uses: actions/setup-node@v4
         with:
@@ -46,5 +85,21 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      - name: Lighthouse CI
+      - name: Lighthouse CI (build local de produção, no runner)
         run: npx -y @lhci/cli@0.16.x autorun
+
+      - name: Salva relatórios em arquivo
+        if: always()
+        run: npx -y @lhci/cli@0.16.x upload --target=filesystem --outputDir=./lighthouse-relatorios
+
+      - name: Resumo do Lighthouse
+        if: always()
+        run: node scripts/lhci-resumo.mjs ./lighthouse-relatorios "Lighthouse — build de produção no runner do CI (mobile, 3 execuções por página)" .lighthouseci/links.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Anexa relatórios do Lighthouse
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-ci-${{ env.COMMIT_SHA }}
+          path: lighthouse-relatorios/
+          retention-days: 30

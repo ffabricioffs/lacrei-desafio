@@ -23,6 +23,18 @@ const Breadcrumb = styled.nav`
     gap: ${({ theme }) => theme.space.xs};
   }
 
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  /* alvo de toque de pelo menos 24px de altura (WCAG 2.5.8) */
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+
   li + li::before {
     content: "/";
     margin-right: ${({ theme }) => theme.space.xs};
