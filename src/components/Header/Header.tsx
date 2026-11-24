@@ -145,7 +145,7 @@ const NavList = styled.ul`
 /**
  * Button Link do Marsha (Bold 18px, hover com fundo emerald-20).
  * Texto em emerald-70 porque o fundo do header é esverdeado (emerald-60 ficaria
- * em ~4,4:1) e hover em emerald-80 (6,8:1). Ver styles/interactionStates.ts.
+ * em 4,43:1) e hover em emerald-80 (6,87:1). Ver styles/interactionStates.ts.
  */
 const NavLink = styled(Link)`
   display: flex;

@@ -336,12 +336,32 @@ const contrastTargets = [
   { page: "/", width: 1440, sel: 'section[aria-labelledby="faq-titulo"] h3 button', name: "Pergunta do acordeão" },
   { page: "/profissionais", width: 1440, sel: "article button", name: "Botão Ver detalhes (secundário)" },
   { page: "/profissionais", width: 1440, sel: 'form button[type="submit"]', name: "Botão Buscar (primário)" },
+  {
+    page: "/profissionais",
+    width: 1440,
+    sel: '[data-evidencia="ghost"]',
+    name: "Botão Limpar filtros (ghost)",
+    // O botão ghost só aparece com um filtro ativo: escolhe "Online" e marca o botão para medir.
+    prepare: async () => {
+      await tab.click('input[type="radio"][value="online"]');
+      await tab.waitForFunction(() =>
+        [...document.querySelectorAll("button")].some((b) => b.textContent.trim() === "Limpar filtros"),
+      );
+      await tab.evaluate(() => {
+        const b = [...document.querySelectorAll("button")].find((x) => x.textContent.trim() === "Limpar filtros");
+        b.setAttribute("data-evidencia", "ghost");
+      });
+      await tab.mouse.move(0, 0);
+      await settle();
+    },
+  },
   { page: "/profissionais", width: 375, sel: 'header button[aria-controls]', name: "Botão do menu mobile", icon: true },
 ];
 const contrastRows = [];
 for (const target of contrastTargets) {
   for (const state of ["padrão", "hover", "foco"]) {
     await measure(target.width, target.page);
+    if (target.prepare) await target.prepare();
     if (state === "hover") await hover(target.sel);
     if (state === "foco") {
       await tab.focus(target.sel);
@@ -423,8 +443,8 @@ ${checks.map((c) => `| ${c.group} | ${c.item} | ${c.figma} | \`${c.actual}\` | $
 
 Os três itens marcados "ajuste de contraste" diferem do Figma **de propósito**: no guia, o texto
 \`#007756\` sobre \`#B2DFD0\` (hover do Outline e do Button Link) tem 3,81:1, abaixo do AA (4,5:1).
-Mantivemos o fundo do guia e usamos \`#014C37\` (6,80:1). No header, o texto padrão do link usa
-\`#007756\`, porque \`#018762\` sobre o degradê do header fica em ~4,4:1.
+Mantivemos o fundo do guia e usamos \`#014C37\` (6,87:1). No header, o texto padrão do link usa
+\`#007756\` (5,45:1 sobre \`#F5FFFB\`), porque \`#018762\` sobre o degradê do header fica em 4,43:1.
 
 ## Capturas dos componentes (build deste commit)
 

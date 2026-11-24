@@ -15,7 +15,7 @@ const c = theme.colors;
  * Ajuste em relação ao Figma (devolutiva da Lacrei, 23/11/2026):
  * o Marsha define hover do Outline/Link como texto emerald-70 (#007756) sobre
  * emerald-20 (#B2DFD0) = 3,81:1. Mantivemos o fundo do guia e escurecemos o
- * texto para emerald-80 (#014C37) = 6,80:1, o mesmo tom do estado pressionado.
+ * texto para emerald-80 (#014C37) = 6,87:1, o mesmo tom do estado pressionado.
  */
 export interface ColorPair {
   fg: string;
@@ -55,7 +55,7 @@ export const interactionStates = {
     },
   },
   navLink: {
-    // No header o fundo é esverdeado: emerald-60 daria ~4,4:1, então usamos emerald-70
+    // No header o fundo é esverdeado: emerald-60 daria 4,43:1, então usamos emerald-70
     default: { fg: c.primaryHover, bg: HEADER_SURFACE, kind: "text", where: "Link do menu (header)" },
     hover: { fg: c.primaryActive, bg: c.primaryLight, kind: "text", where: "Link do menu (hover)" },
     mobilePanel: { fg: c.primaryHover, bg: c.white, kind: "text", where: "Link do menu (painel mobile)" },
