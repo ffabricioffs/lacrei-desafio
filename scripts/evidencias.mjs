@@ -146,6 +146,8 @@ for (const page of PAGES) {
       const smallTargets = [...document.querySelectorAll("a, button, input, select")]
         .filter((el) => el.offsetParent !== null && !el.classList.contains("visually-hidden"))
         .filter((el) => getComputedStyle(el).position !== "absolute" || el.offsetWidth > 1)
+        // Links dentro de um parágrafo de texto são a exceção "inline" do WCAG 2.5.8 e não contam.
+        .filter((el) => !(el.tagName === "A" && el.parentElement?.tagName === "P"))
         .map((el) => el.getBoundingClientRect())
         .filter((r) => r.width > 1 && (r.height < 24 || r.width < 24)).length;
       return {
@@ -510,6 +512,8 @@ ${respRows
   .join("\n")}
 
 Larguras escolhidas pelos pontos de quebra do Marsha: mobile 360/375/414, tablet 768, desktop 1024/1440.
+"Alvos < 24px" conta links, botões e campos visíveis menores que 24 × 24px (WCAG 2.5.8). Links no meio de
+um parágrafo (ex.: cvv.org.br, commit no rodapé) ficam de fora por serem a exceção de texto corrido.
 
 ## 4. Conferência com o Marsha ${yes(marshaOk)}
 
